@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert } from 'react-native';
-import { firebase } from '@react-native-firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 const backImage = require("../assets/Img2.png");
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      console.log('User logged in successfully!');
-      // Navigate to the main screen or dashboard
-    } catch (error) {
-      Alert.alert('Error', error.message);
-      console.error('Error signing in:', error);
-    }
+  const handleLogin = async() => {
+    // Implement your authentication logic here
+    const auth = getAuth();
+    
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in successfully
+        const user = userCredential.user;
+        console.log('User:', user);
+        navigation.navigate('ForumPageWithTabs');
+      })
+      .catch((error) => {
+        // Handle errors here
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error('Error:', errorCode, errorMessage);
+      });
   };
 
   return (

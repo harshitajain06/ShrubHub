@@ -19,7 +19,7 @@ const ForumPageWithTabs = ({ navigation }) => {
       </Card>
       {/* <Header navigation={navigation} /> Include the Header component */}
       <Tab.Navigator
-        tabBarOptions={{
+        screenOptions={{
           activeTintColor: 'white',
           inactiveTintColor: 'white',
           style: { backgroundColor: '#7C9D45' },
