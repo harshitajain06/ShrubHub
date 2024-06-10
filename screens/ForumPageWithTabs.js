@@ -1,12 +1,10 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import { ImageBackground, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { ImageBackground, StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ForumPage from './ForumPage';
-import MarketplacePage from './MarketplacePage';
+import Marketplace from './MarketplacePage';
 import Header from './Header'; // Import the Header component
-import { Card } from 'react-native-paper';
 const backImage = require("../assets/Img2.png");
 
 const Tab = createMaterialTopTabNavigator();
@@ -14,9 +12,9 @@ const Tab = createMaterialTopTabNavigator();
 const ForumPageWithTabs = ({ navigation }) => {
   return (
     <ImageBackground source={backImage} style={styles.container}>
-      <Card>
-        <Header />
-      </Card>
+      
+      <Header navigation={navigation} />
+    
       {/* <Header navigation={navigation} /> Include the Header component */}
       <Tab.Navigator
         screenOptions={{
@@ -25,10 +23,10 @@ const ForumPageWithTabs = ({ navigation }) => {
           style: { backgroundColor: '#7C9D45' },
         }}>
         <Tab.Screen name="Forum" component={ForumPage} />
-        <Tab.Screen name="Marketplace" component={MarketplacePage} />
+        <Tab.Screen name="Marketplace" component={Marketplace} />
       </Tab.Navigator>
-      <TouchableOpacity onPress={() => navigation.navigate('AddPost')} style={styles.addPostIcon}>
-        <Icon name="add" size={30} color="white" />
+      <TouchableOpacity onPress={() => navigation.navigate('CreatePost')} style={styles.addPostIcon}>
+      <Image source={require('../assets/Add.png')} style={{ width: 50, height: 50 }} />
       </TouchableOpacity>
     </ImageBackground>
   );
