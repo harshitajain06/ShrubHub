@@ -10,7 +10,8 @@ import MyProfile from './screens/MyProfile';
 import Header from './screens/Header';
 import ForumPage from './screens/ForumPage';
 import Marketplace from './screens/MarketplacePage'; 
-import CreatePost from './screens/CreatePost'
+import CreatePost from './screens/CreatePost';
+import Shop from './screens/Shop';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const App = () => {
       <Stack.Screen name="ForumPage" component={ForumPage} />
       <Stack.Screen name="Header" component={Header} />
       <Stack.Screen name="Marketplace" component={Marketplace} />
+      <Stack.Screen name="Shop" component={Shop} />
       <Stack.Screen
         name="CreatePost"
         component={CreatePost}
