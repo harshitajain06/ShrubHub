@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config';
 
-const Shop = ({ route }) => {
+const Shop = ({ route, navigation }) => {
   const { shop } = route.params; // Get the shop details from route params
   const [plants, setPlants] = useState([]);
 
@@ -28,11 +28,17 @@ const Shop = ({ route }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Image source={require('../assets/Back.png')} style={styles.backIcon} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{shop.shopName}</Text>
+      </View>
       <View style={styles.shopContainer}>
         <Image source={{ uri: shop.imageUrl }} style={styles.image} />
         <View style={styles.infoContainer}>
           <View style={styles.headerContainer}>
-            <Text style={styles.shopName}>{shop.ownerName}</Text>
+            <Text style={styles.shopOwner}>{shop.ownerName}</Text>
           </View>
           <View style={styles.divider} />
           <View style={styles.detailsContainer}>
@@ -65,6 +71,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 20,
   },
+  header: {
+    width: '100%',
+    backgroundColor: '#7C9D45',
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    flexDirection: 'row',
+    marginTop:50,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 15,
+  },
+  backIcon: {
+    width: 36,
+    height: 32,
+    tintColor: 'white', // Make the arrow white
+  },
+  headerText: {
+    fontSize: 20,
+    color: 'white',
+    fontWeight: 'bold',
+  },
   shopContainer: {
     flexDirection: 'row',
     padding: 10,
@@ -74,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     overflow: 'hidden',
     width: '90%',
-    marginTop: 20,
+    marginBottom: 20,
   },
   image: {
     width: 100,
@@ -90,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  shopName: {
+  shopOwner: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#7C9D45',

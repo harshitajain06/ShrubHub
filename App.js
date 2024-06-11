@@ -27,7 +27,7 @@ const App = () => {
       <Stack.Screen name="ForumPage" component={ForumPage} />
       <Stack.Screen name="Header" component={Header} />
       <Stack.Screen name="Marketplace" component={Marketplace} />
-      <Stack.Screen name="Shop" component={Shop} />
+      <Stack.Screen name="Shop" component={Shop} options={{ headerShown: false }} />
       <Stack.Screen
         name="CreatePost"
         component={CreatePost}
