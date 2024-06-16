@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useNavigation } from '@react-navigation/native';
 import { db } from '../config';
 
-const MarketPlace = () => {
+const MarketPlace = ({ searchQuery }) => {
   const [shops, setShops] = useState([]);
-  const navigation = useNavigation(); // Use the useNavigation hook
+  const [filteredShops, setFilteredShops] = useState([]);
+  const navigation = useNavigation();
 
   const fetchShops = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'shops'));
       const shopList = [];
       querySnapshot.forEach((doc) => {
-        const { shopName, phoneNo, city, imageUrl, ownerName} = doc.data();
-        shopList.push({ id: doc.id, shopName, phoneNo, city, imageUrl, ownerName }); // Include doc id
+        const { shopName, phoneNo, city, imageUrl, ownerName } = doc.data();
+        shopList.push({ id: doc.id, shopName, phoneNo, city, imageUrl, ownerName });
       });
       setShops(shopList);
+      setFilteredShops(shopList);
     } catch (error) {
       console.error('Error fetching shops:', error);
     }
@@ -26,13 +28,25 @@ const MarketPlace = () => {
     fetchShops();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = shops.filter(shop =>
+        shop.shopName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        shop.city.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredShops(filtered);
+    } else {
+      setFilteredShops(shops);
+    }
+  }, [searchQuery, shops]);
+
   const handleViewPress = (shop) => {
-    navigation.navigate('Shop', { shop }); // Navigate to the Shop screen with the shop details
+    navigation.navigate('Shop', { shop });
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {shops.map((shop, index) => (
+      {filteredShops.map((shop, index) => (
         <View key={index} style={styles.shopContainer}>
           <Image source={{ uri: shop.imageUrl }} style={styles.image} />
           <View style={styles.infoContainer}>
@@ -106,8 +120,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   detailsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: 5,
   },
   details: {
     fontSize: 14,

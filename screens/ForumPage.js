@@ -3,8 +3,9 @@ import { View, Text, ScrollView, Image, StyleSheet, RefreshControl } from 'react
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config';
 
-const ForumPage = () => {
+const ForumPage = ({ searchQuery }) => {
   const [plants, setPlants] = useState([]);
+  const [filteredPlants, setFilteredPlants] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchPlants = async () => {
@@ -16,6 +17,7 @@ const ForumPage = () => {
         plantList.push({ imageUrl, caption });
       });
       setPlants(plantList);
+      setFilteredPlants(plantList);
     } catch (error) {
       console.error('Error fetching plants:', error);
     }
@@ -24,6 +26,15 @@ const ForumPage = () => {
   useEffect(() => {
     fetchPlants();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = plants.filter(plant => plant.caption.toLowerCase().includes(searchQuery.toLowerCase()));
+      setFilteredPlants(filtered);
+    } else {
+      setFilteredPlants(plants);
+    }
+  }, [searchQuery, plants]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -38,7 +49,7 @@ const ForumPage = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {plants.map((plant, index) => (
+      {filteredPlants.map((plant, index) => (
         <View key={index} style={styles.plantContainer}>
           <View style={styles.imageContainer}>
             <Image source={{ uri: plant.imageUrl }} style={styles.image} />
