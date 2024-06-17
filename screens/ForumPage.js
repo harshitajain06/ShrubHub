@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, StyleSheet, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, RefreshControl, TouchableOpacity } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config';
+import { useNavigation } from '@react-navigation/native';
 
 const ForumPage = ({ searchQuery }) => {
   const [plants, setPlants] = useState([]);
   const [filteredPlants, setFilteredPlants] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   const fetchPlants = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'posts'));
       const plantList = [];
       querySnapshot.forEach((doc) => {
-        const { imageUrl, caption } = doc.data();
-        plantList.push({ imageUrl, caption });
+        const { imageUrl, caption, description } = doc.data();
+        plantList.push({ imageUrl, caption, description, id: doc.id });
       });
       setPlants(plantList);
       setFilteredPlants(plantList);
@@ -42,6 +44,10 @@ const ForumPage = ({ searchQuery }) => {
     setRefreshing(false);
   };
 
+  const handleImagePress = (plant) => {
+    navigation.navigate('PostPage', { plant });
+  };
+
   return (
     <ScrollView
       contentContainerStyle={styles.container}
@@ -51,9 +57,11 @@ const ForumPage = ({ searchQuery }) => {
     >
       {filteredPlants.map((plant, index) => (
         <View key={index} style={styles.plantContainer}>
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: plant.imageUrl }} style={styles.image} />
-          </View>
+          <TouchableOpacity onPress={() => handleImagePress(plant)}>
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: plant.imageUrl }} style={styles.image} />
+            </View>
+          </TouchableOpacity>
           <View style={styles.captionContainer}>
             <Text style={styles.captionText}>{plant.caption}</Text>
           </View>
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#7C9D45',
     borderRadius: 10,
-    overflow: 'hidden', // Ensure the image is clipped by the border
+    overflow: 'hidden', 
   },
   image: {
     width: '100%',
@@ -88,8 +96,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 10,
     padding: 10,
-    alignSelf: 'center', // Center the caption container horizontally
-    width: '90%', // Set the width of the caption container
+    alignSelf: 'center', 
+    width: '90%', 
   },
   captionText: {
     color: 'white',

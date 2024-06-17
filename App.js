@@ -12,6 +12,7 @@ import ForumPage from './screens/ForumPage';
 import Marketplace from './screens/MarketplacePage'; 
 import CreatePost from './screens/CreatePost';
 import Shop from './screens/Shop';
+import PostPage from './screens/PostPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,7 @@ const App = () => {
   return (
     <NavigationContainer>
     <Stack.Navigator>
-    <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+    <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
       <Stack.Screen name="ForumPageWithTabs" component={ForumPageWithTabs} />
@@ -27,6 +28,7 @@ const App = () => {
       <Stack.Screen name="ForumPage" component={ForumPage} />
       <Stack.Screen name="Header" component={Header} />
       <Stack.Screen name="Marketplace" component={Marketplace} />
+      <Stack.Screen name="PostPage" component={PostPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Shop" component={Shop} options={{ headerShown: false }} />
       <Stack.Screen
         name="CreatePost"
