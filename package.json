@@ -16,6 +16,7 @@
     "@react-navigation/material-top-tabs": "^6.6.13",
     "@react-navigation/native-stack": "^6.9.26",
     "expo": "^51.0.8",
+    "expo-image-picker": "~15.0.5",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.12.2",
     "react": "18.2.0",
@@ -23,8 +24,8 @@
     "react-native-elements": "^3.4.3",
     "react-native-image-picker": "^7.1.2",
     "react-native-paper": "^5.12.3",
-    "react-native-vector-icons": "^10.1.0",
-    "expo-image-picker": "~15.0.5"
+    "react-native-toast-message": "^2.2.0",
+    "react-native-vector-icons": "^10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -14,8 +14,7 @@ const LoginScreen = ({ navigation }) => {
       .then((userCredential) => {
         // Signed in successfully
         const user = userCredential.user;
-        console.log('User:', user);
-
+        
         // Extracting the username from user object. Adjust this based on how your user object is structured.
         const username = user.displayName || user.email.split('@')[0];  // Assuming username is part of displayName or email before '@'
         
@@ -23,9 +22,25 @@ const LoginScreen = ({ navigation }) => {
       })
       .catch((error) => {
         // Handle errors here
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error('Error:', errorCode, errorMessage);
+        let errorMessage;
+        switch (error.code) {
+          case 'auth/invalid-email':
+            errorMessage = 'The email address is badly formatted.';
+            break;
+          case 'auth/user-disabled':
+            errorMessage = 'This user account has been disabled.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'There is no user record corresponding to this identifier. The user may have been deleted.';
+            break;
+          case 'auth/wrong-password':
+            errorMessage = 'The password is invalid or the user does not have a password.';
+            break;
+          default:
+            errorMessage = 'An unknown error occurred. Please try again later.';
+        }
+
+        Alert.alert('Login Error', errorMessage);
       });
   };
 
