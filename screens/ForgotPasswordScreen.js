@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert, StyleSheet } from 'react-native';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 const backImage = require('../assets/Img2.png');
 
@@ -7,29 +8,87 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
 
   const handleSend = () => {
-    // Handle sending reset password link
-    console.log('Sending reset password link to:', email);
-    // Optionally, navigate to another screen after sending reset link
-    navigation.navigate('SignUpScreen');
+    const auth = getAuth();
+    
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        // Password reset email sent
+        Alert.alert('Success', 'Password reset link sent to your email.');
+        navigation.navigate('LoginScreen');
+      })
+      .catch((error) => {
+        // Handle errors here
+        let errorMessage;
+        switch (error.code) {
+          case 'auth/invalid-email':
+            errorMessage = 'The email address is badly formatted.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'There is no user corresponding to this email.';
+            break;
+          default:
+            errorMessage = 'An error occurred. Please try again.';
+        }
+
+        Alert.alert('Error', errorMessage);
+      });
   };
 
   return (
-    <ImageBackground source={backImage} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ alignItems: 'center' }}>
-        <Text style={{ color: 'white', fontSize: 20, marginBottom: 20 }}>Reset Password</Text>
+    <ImageBackground source={backImage} style={styles.container}>
+      <View style={styles.overlay}>
+        <Text style={styles.title}>Reset Password</Text>
         <TextInput
-          style={{ borderColor: 'white', borderWidth: 1, borderRadius: 20, width: 300, height: 50, padding: 10, color: 'white', marginBottom: 20 }}
+          style={styles.input}
           placeholder="Email"
           placeholderTextColor="white"
           value={email}
           onChangeText={setEmail}
         />
-        <TouchableOpacity onPress={handleSend} style={{ backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1, borderColor: 'white', borderRadius: 20 }}>
-          <Text style={{ color: 'white', fontSize: 18 }}>Send</Text>
+        <TouchableOpacity onPress={handleSend} style={styles.button}>
+          <Text style={styles.buttonText}>Send</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlay: {
+    alignItems: 'center',
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  input: {
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 20,
+    width: 300,
+    height: 50,
+    padding: 10,
+    color: 'white',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'transparent',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+});
 
 export default ForgotPasswordScreen;

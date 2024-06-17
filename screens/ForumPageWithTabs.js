@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
+    marginTop: 40,
   },
   addPostIcon: {
     position: 'absolute',

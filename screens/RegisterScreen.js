@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../config';
 import Toast from 'react-native-toast-message';
-const backImage = require("../assets/Img2.png");
+
+const backImage = require('../assets/Img2.png');
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -52,47 +53,100 @@ const RegisterScreen = ({ navigation }) => {
       // Show error alert
       Alert.alert('Error', errorMessage);
 
+      // Show error toast
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: errorMessage,
+      });
     }
   };
 
   return (
-    <ImageBackground source={backImage} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ alignItems: 'center' }}>
-        <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold', fontStyle: 'italic', marginVertical: 20 }}>Welcome Form</Text>
+    <ImageBackground source={backImage} style={styles.container}>
+      <View style={styles.innerContainer}>
+        <Text style={styles.title}>Welcome Form</Text>
         <TextInput
-          style={{ borderColor: 'white', borderWidth: 1, borderRadius: 20, width: 300, height: 50, padding: 10, color: 'white', marginBottom: 10 }}
+          style={styles.input}
           placeholder="Name"
           placeholderTextColor="white"
           value={name}
-          onChangeText={text => setName(text)}
+          onChangeText={setName}
         />
         <TextInput
-          style={{ borderColor: 'white', borderWidth: 1, borderRadius: 20, width: 300, height: 50, padding: 10, color: 'white', marginBottom: 10 }}
+          style={styles.input}
           placeholder="Email"
           placeholderTextColor="white"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={setEmail}
         />
         <TextInput
-          style={{ borderColor: 'white', borderWidth: 1, borderRadius: 20, width: 300, height: 50, padding: 10, color: 'white', marginBottom: 10 }}
+          style={styles.input}
           placeholder="Password"
           placeholderTextColor="white"
           secureTextEntry
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={setPassword}
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', marginTop: 20, marginRight: 60 }}>
-          <TouchableOpacity onPress={handleSignUp} style={{ backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1, borderColor: 'white' }}>
-            <Text style={{ color: 'white', fontSize: 18 }}>Register</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+            <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={{ backgroundColor: 'transparent', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 20, borderWidth: 1, borderColor: 'white' }}>
-            <Text style={{ color: 'white', fontSize: 18 }}>Log In</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.button}>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast />
     </ImageBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerContainer: {
+    alignItems: 'center',
+  },
+  title: {
+    color: 'white',
+    fontSize: 40,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    marginVertical: 20,
+  },
+  input: {
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 20,
+    width: 300,
+    height: 50,
+    padding: 10,
+    color: 'white',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    marginTop: 20,
+    marginRight: 60,
+  },
+  button: {
+    backgroundColor: 'transparent',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+});
 
 export default RegisterScreen;
