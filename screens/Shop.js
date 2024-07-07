@@ -14,8 +14,8 @@ const Shop = ({ route, navigation }) => {
         const querySnapshot = await getDocs(plantsQuery);
         const plantList = [];
         querySnapshot.forEach((doc) => {
-          const { imageUrl, name } = doc.data(); // Assuming the field name for plant name is 'name'
-          plantList.push({ imageUrl, name });
+          const { imageUrl, name, price } = doc.data(); // Assuming the field name for plant name is 'name'
+          plantList.push({ imageUrl, name, price });
         });
         setPlants(plantList);
       } catch (error) {
@@ -55,7 +55,8 @@ const Shop = ({ route, navigation }) => {
               <Image source={{ uri: plant.imageUrl }} style={styles.plantImage} />
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.plantName}>{plant.name}</Text>
+            <Text style={styles.plantName}>{plant.name}</Text>
+              <Text style={styles.plantName}>Price: {plant.price}</Text>
             </View>
           </View>
         ))}
